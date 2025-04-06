@@ -1,0 +1,86 @@
+package com.openapi.nasa.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+//JSON repersentation
+public class ApodResponse {
+	@JsonProperty("date")//this is key present in JSON
+	private String date;
+	
+	@JsonProperty("explanation")
+	private String explanation;
+	
+	@JsonProperty("hdurl")
+	private String hdUrl;
+	
+	@JsonProperty("media_type")
+	private String mediaType;
+	
+	@JsonProperty("service_version")
+	private String serviceVersion;
+	
+	@JsonProperty("title")
+	private String title;
+	
+	@JsonProperty("url")
+	private String url;
+	
+	
+	public ApodResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public ApodResponse(String date, String explanation, String hdurl, String media_type, String service_version,
+			String title, String url) {
+		super();
+		this.date = date;
+		this.explanation = explanation;
+		this.hdUrl = hdurl;
+		this.mediaType = media_type;
+		this.serviceVersion = service_version;
+		this.title = title;
+		this.url = url;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getExplanation() {
+		return explanation;
+	}
+	public void setExplanation(String explanation) {
+		this.explanation = explanation;
+	}
+	public String getHdurl() {
+		return hdUrl;
+	}
+	public void setHdurl(String hdurl) {
+		this.hdUrl = hdurl;
+	}
+	public String getMedia_type() {
+		return mediaType;
+	}
+	public void setMedia_type(String media_type) {
+		this.mediaType = media_type;
+	}
+	public String getService_version() {
+		return serviceVersion;
+	}
+	public void setService_version(String service_version) {
+		this.serviceVersion = service_version;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+}
