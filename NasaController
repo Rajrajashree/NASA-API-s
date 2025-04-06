@@ -1,0 +1,123 @@
+package com.openapi.nasa.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.openapi.nasa.entity.NasaApod;
+import com.openapi.nasa.model.ApodResponse;
+import com.openapi.nasa.response.MarsRoverPhotosResponse;
+import com.openapi.nasa.service.NasaApiService;
+
+
+@RestController
+public class NasaController {
+		
+		@Autowired
+	    private NasaApiService nasaApiService;
+		
+		@GetMapping("/api/apod")
+		public NasaApod getApod()
+		{
+			return nasaApiService.getAstronomyPictureOfTheDay();
+			
+		}
+		
+		@GetMapping(value ="/apods",produces = MediaType.APPLICATION_JSON_VALUE)
+		public List<NasaApod> getAllSavedApods()
+		{
+			
+			return nasaApiService.fetchAllApods();
+			
+		}
+		
+		@GetMapping("/api/save-apod")
+		public String getLatestSavedApod(NasaApod apod)
+		{
+			NasaApod theNasaApod = nasaApiService.getAstronomyPictureOfTheDay();
+			nasaApiService.saveApod(theNasaApod);
+			return "Successfully saved the latest apod";
+		}
+		
+
+		
+		@GetMapping("/api/apod/{apodId}")
+		public void getApodById(@PathVariable Integer id)
+		{
+			nasaApiService.findNasaApodById(id);
+			
+		}
+		
+		
+		@DeleteMapping("/api/apod/{apodId}")
+		public String deleteApodById(Integer id)
+		{
+			nasaApiService.deleteNasaApodById(id);
+			
+			return"Apod DELETED Successfully";
+		}
+		
+		@PutMapping("/api/apod/{apodId}")
+		public String updateApodById(@PathVariable Integer id, @RequestBody NasaApod theNasaApod)
+		{
+			NasaApod existingApod = nasaApiService.findNasaApodById(id);
+			
+			existingApod.setTitle(theNasaApod.getTitle());
+			existingApod.setExplanation(theNasaApod.getExplanation());///////
+			nasaApiService.saveApod(existingApod);
+			
+			return"Apod UPDATED Successfully";
+		}
+		
+		
+		@GetMapping("/api/rover/{roverName}/{earthDate}/{roverCamera}") //mars rover photos
+		public  MarsRoverPhotosResponse getRoverPhotos(String roverType, String earthDate, String camera)
+		{
+			return nasaApiService.getRoverPhotos(roverType, earthDate, camera);
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
