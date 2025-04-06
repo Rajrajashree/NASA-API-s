@@ -1,1 +1,3 @@
-# NASA-API-s
+The NASA API Implementation Using Spring Boot project aims to integrate NASA's public APIs into a user-friendly application, delivering engaging astronomy content. By leveraging Spring Boot's powerful backend capabilities, this project will provide seamless access to NASA’s Astronomy Picture of the Day (APOD) and Mars Rover Photos APIs.
+Users will be able to explore daily space images, fascinating astronomical facts, and real-time Mars rover photographs through an intuitive and responsive interface. This project not only enhances accessibility to NASA's vast data resources but also serves as an educational and interactive platform for space enthusiasts.
+I performed various CRUD operations to fetch the datas.
