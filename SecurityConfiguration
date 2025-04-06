@@ -1,0 +1,40 @@
+public class SecurityConfiguration{
+public JdbcUserDetailsManager  jdbcUserDetailsManager (DataSource dataSource) {
+		JdbcUserDetailsManager jdbc = new JdbcUserDetailsManager(dataSource);
+		jdbc.setUsersByUsernameQuery("select user_id, pw, active from nasa_members where user_id =?");
+		jdbc.setAuthoritiesByUsernameQuery("select user_id, role from nasa_roles where user_id =?");
+		
+		return jdbc;
+	}
+	
+	
+	
+	@Bean
+	public SecurityFilterChain securityFilerChain(HttpSecurity http)  throws Exception{ //securityFilterchain --- authorization(giving access) and authentication(checking). is interface and httpSecurity is a class(pass as an argument)
+		http.authorizeHttpRequests(configure -> //authorizehttprequests is abstract class present in httpSecurity so calling using its variable http
+		configure
+		
+		.requestMatchers(HttpMethod.GET,"/api/apod") //fetch all
+		.hasAnyRole("EMPLOYEE","MANAGER","ADMIN") //we are using hasAnyRole because so many roles are there and hasRole for one role
+		
+		.requestMatchers(HttpMethod.GET,"/api/save-apod") // save
+		.hasAnyRole("EMPLOYEE","MANAGER","ADMIN")
+		
+		.requestMatchers(HttpMethod.GET,"/api/apod/**") //get by id
+		.hasAnyRole("EMPLOYEE","MANAGER","ADMIN")
+		
+		.requestMatchers(HttpMethod.DELETE,"/api/apod/**") //delete by id
+		.hasAnyRole("EMPLOYEE","MANAGER","ADMIN")
+		
+		.requestMatchers(HttpMethod.PUT,"/api/apod/**") //update by id
+		.hasAnyRole("EMPLOYEE","MANAGERM","ADMIN")
+		
+		.requestMatchers(HttpMethod.GET,"/apods") //fetch all data of every day details
+		.hasAnyRole("EMPLOYEE","MANAGER","ADMIN"));
+		
+		http.httpBasic(Customizer.withDefaults()); //basic security we are giving to this api (Customizer is class with withDefaults method for bacis security)
+		http.csrf(csrf->csrf.disable()); // we are disabling csrf as this is no enterprise project we are using stateless project not many users
+		return http.build(); // so that it will inject inside bean
+	
+	}
+	}
