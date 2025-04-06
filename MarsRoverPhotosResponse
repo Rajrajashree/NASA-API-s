@@ -1,0 +1,32 @@
+package com.openapi.nasa.response;
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.openapi.nasa.model.MarsRoverPhoto;
+
+public class MarsRoverPhotosResponse {
+	@JsonProperty("photos")
+	private List<MarsRoverPhoto> marsRoverPhotos;
+
+	public List<MarsRoverPhoto> getMarsRoverPhotos() {
+		return marsRoverPhotos;
+	}
+
+	public void setMarsRoverPhotos(List<MarsRoverPhoto> marsRoverPhotos) {
+		this.marsRoverPhotos = marsRoverPhotos;
+	}
+
+	public MarsRoverPhotosResponse(List<MarsRoverPhoto> marsRoverPhotos) {
+		super();
+		this.marsRoverPhotos = marsRoverPhotos;
+	}
+
+	public MarsRoverPhotosResponse() {
+		super();
+	}
+	
+	
+	
+	
+}
