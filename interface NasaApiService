@@ -1,0 +1,40 @@
+package com.openapi.nasa.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.openapi.nasa.entity.NasaApod;
+import com.openapi.nasa.response.MarsRoverPhotosResponse;
+
+public interface NasaApiService {
+	// APOD API SERVICE //
+
+	    NasaApod getAstronomyPictureOfTheDay(); 
+	    
+	    void deleteAllApods();
+
+	    
+	    
+	    List<NasaApod> fetchAllApods();
+	    
+
+	    void saveApod(NasaApod theNasaApod);
+	    
+	    void updateById(Integer id,NasaApod theNasaApod);
+	    
+	    NasaApod findNasaApodById(Integer id);
+	    
+	    void deleteNasaApodById(Integer id);
+	    
+	    // convience method for fetchingAllApods for mvc controller //
+	    List<NasaApod> fetchAllApodsMVC();
+
+
+	// MARS ROVER API SERVICE //
+	    public MarsRoverPhotosResponse getRoverPhotos(String roverType, String earthDate, String camera);
+	  
+	}
+	
+
