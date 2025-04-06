@@ -1,0 +1,163 @@
+package com.openapi.nasa.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import com.openapi.nasa.daorepo.NasaRepository;
+import com.openapi.nasa.entity.NasaApod;
+import com.openapi.nasa.exception.CameraNotFoundException;
+import com.openapi.nasa.exception.NasaNotFoundException;
+import com.openapi.nasa.model.MarsRoverCamera;
+import com.openapi.nasa.response.MarsRoverPhotosResponse;
+
+import io.swagger.v3.core.model.ApiDescription;
+
+@Service
+public class NasaApiServiceImplementation implements NasaApiService {
+
+	@Value("${nasa.api.key}")
+	private String apiKey;
+
+	// save api-apod-url
+	private String apiApodURL = "https://api.nasa.gov/planetary/apod?api_key={apiKey}";
+
+	// injecting ApodRepository and restTemplate
+	private NasaRepository theNasaRepository;
+	private RestTemplate theRestTemplate; // object will be injected by @Bean annotation method
+
+	@Autowired
+	public NasaApiServiceImplementation(NasaRepository theNasaRepository, RestTemplate theRestTemplate) {
+		super();
+		this.theNasaRepository = theNasaRepository;
+		this.theRestTemplate = theRestTemplate;
+	}
+
+	public NasaApiServiceImplementation() {
+		super();
+	}
+
+	@Override
+	public NasaApod getAstronomyPictureOfTheDay() {
+		return theRestTemplate.getForObject(apiApodURL, NasaApod.class, apiKey);
+	}
+
+	@Override
+	public void deleteAllApods() {
+
+		theNasaRepository.deleteAll();
+	}
+
+	@Override
+	@Transactional
+	public void saveApod(NasaApod theNasaApod) {
+		// TODO Auto-generated method stub
+		theNasaRepository.save(theNasaApod);
+	}
+
+	@Override
+	public List<NasaApod> fetchAllApods() {
+		// TODO Auto-generated method stub
+		List<NasaApod> apods = theNasaRepository.findAll();
+		if (apods.isEmpty()) {
+			throw new NasaNotFoundException("No Apods Found . Try Adding Apod To The DataBase");
+		}
+
+		else {
+			return apods;
+		}
+	}
+
+	@Override
+	public NasaApod findNasaApodById(Integer id) {
+
+		Optional<NasaApod> result = theNasaRepository.findById(id);
+		NasaApod foundNasaApod = null;
+		if (result.isPresent()) {
+			foundNasaApod = result.get();
+
+		} else {
+			throw new NasaNotFoundException("No Apod Found With Id:" + id);
+		}
+		return foundNasaApod;
+	}
+
+	@Override
+	public void deleteNasaApodById(Integer id) {
+
+		Optional<NasaApod> result = theNasaRepository.findById(id);
+		NasaApod foundNasaApod = null;
+
+		if (!result.isEmpty()) {
+			foundNasaApod = result.get();
+
+		} else {
+			throw new NasaNotFoundException("No Apod Found With Id:" + id);
+		}
+		theNasaRepository.deleteById(id);
+		;
+	}
+
+	@Override
+	public List<NasaApod> fetchAllApodsMVC() {
+		// TODO Auto-generated method stub
+		return theNasaRepository.findAll();
+	}
+
+	@Override
+	public void updateById(Integer id, NasaApod theNasaApod) {
+		Optional<NasaApod> existingApod = theNasaRepository.findById(id);
+
+		// only explaination and title should be updated
+		if (!existingApod.isEmpty()) {
+			NasaApod n = existingApod.get();
+			n.setTitle(theNasaApod.getTitle());
+			n.setExplanation(theNasaApod.getExplanation());
+			theNasaRepository.save(n);
+		} else {
+			throw new NasaNotFoundException("No Apod Found With Id:" + id);
+		}
+	}
+
+	// public static boolean flag = false;
+
+	public static boolean findCamera(String cameraName) {
+
+		String roverCamera[] = { "fhaz", "rhaz", "mast", "chomcam", "mahli", "mardi", "navcam", "pancam", "minites" };
+
+		for (String cam : roverCamera) {
+			if (cam.equalsIgnoreCase(cameraName)) {
+				return true;
+
+			}
+		}
+		return false;
+
+	}
+
+	@Override
+	public MarsRoverPhotosResponse getRoverPhotos(String roverType, String earthDate, String camera) {
+		// TODO Auto-generated method stub
+		boolean res = findCamera(camera);
+		if (res == true) {
+			String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/" + roverType + "/photos?earth_date="
+					+ earthDate + "&camera=" + camera + "&api_key=" + apiKey;
+			return theRestTemplate.getForObject(url, MarsRoverPhotosResponse.class);
+
+		}
+
+		else {
+
+			throw new NasaNotFoundException("Camera doesnot exist");
+		}
+
+	}
+
+	
+
+}
