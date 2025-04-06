@@ -1,0 +1,65 @@
+package com.openapi.nasa.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class MarsRoverCamera {
+	@JsonProperty("id")
+	private long id;
+	
+	@JsonProperty("name")
+	private String cameraType;
+	
+	@JsonProperty("rover_id")
+	private int roverId;
+	
+	@JsonProperty("full_name")
+	private String cameraFullName;
+
+	public MarsRoverCamera() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public MarsRoverCamera(long id, String cameraType, int roverId, String cameraFullName) {
+		super();
+		this.id = id;
+		this.cameraType = cameraType;
+		this.roverId = roverId;
+		this.cameraFullName = cameraFullName;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getCameraType() {
+		return cameraType;
+	}
+
+	public void setCameraType(String cameraType) {
+		this.cameraType = cameraType;
+	}
+
+	public int getRoverId() {
+		return roverId;
+	}
+
+	public void setRoverId(int roverId) {
+		this.roverId = roverId;
+	}
+
+	public String getCameraFullName() {
+		return cameraFullName;
+	}
+
+	public void setCameraFullName(String cameraFullName) {
+		this.cameraFullName = cameraFullName;
+	}
+	
+	
+
+}
